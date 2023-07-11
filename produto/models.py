@@ -1,7 +1,7 @@
-from django.db import models
-from PIL import Image
-import os
 from django.conf import settings
+import os
+from PIL import Image
+from django.db import models
 from django.utils.text import slugify
 from utils import utils
 
@@ -11,16 +11,19 @@ class Produto(models.Model):
     descricao_curta = models.TextField(max_length=255)
     descricao_longa = models.TextField()
     imagem = models.ImageField(
-        upload_to='produto_imagens/%Y/%m', blank=True, null=True)
+        upload_to='produto_imagens/%Y/%m/', blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
     preco_marketing = models.FloatField(verbose_name='Preço')
-    preco_marketing_promocional = models.FloatField(default=0,
-                                                    verbose_name='Preço Promo')
+    preco_marketing_promocional = models.FloatField(
+        default=0, verbose_name='Preço Promo.')
     tipo = models.CharField(
-        default='V', max_length=1, choices=(
+        default='V',
+        max_length=1,
+        choices=(
             ('V', 'Variável'),
-            ('S', 'Simples')),
+            ('S', 'Simples'),
         )
+    )
 
     def get_preco_formatado(self):
         return utils.formata_preco(self.preco_marketing)
@@ -28,7 +31,7 @@ class Produto(models.Model):
 
     def get_preco_promocional_formatado(self):
         return utils.formata_preco(self.preco_marketing_promocional)
-    get_preco_promocional_formatado.short_description = 'Preço Promo'
+    get_preco_promocional_formatado.short_description = 'Preço Promo.'
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -44,7 +47,9 @@ class Produto(models.Model):
 
         new_img = img_pil.resize((new_width, new_height), Image.LANCZOS)
         new_img.save(
-            img_full_path, optimize=True, quality=50
+            img_full_path,
+            optimize=True,
+            quality=50
         )
 
     def save(self, *args, **kwargs):
